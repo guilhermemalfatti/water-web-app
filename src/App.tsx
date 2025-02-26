@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Amplify } from 'aws-amplify';
-import { fetchAuthSession } from 'aws-amplify/auth';
-import { Droplet, Loader2 } from 'lucide-react';
-import { awsConfig } from './aws-config';
-import AuthForm from './components/AuthForm';
-import Dashboard from './components/Dashboard';
-import { initializeIoT } from './iotService';
+import React, { useState, useEffect } from "react";
+import { Amplify } from "aws-amplify";
+import { fetchAuthSession } from "aws-amplify/auth";
+import { Droplet, Loader2 } from "lucide-react";
+import { awsConfig } from "./aws-config";
+import AuthForm from "./components/AuthForm";
+import Dashboard from "./components/Dashboard";
 
 // Configure Amplify
 Amplify.configure(awsConfig);
@@ -19,13 +18,8 @@ function App() {
       try {
         const session = await fetchAuthSession();
         setIsAuthenticated(!!session.tokens);
-        
-        if (session.tokens) {
-          // Initialize IoT service after authentication
-          await initializeIoT();
-        }
       } catch (error) {
-        console.error('Auth check error:', error);
+        console.error("Auth check error:", error);
         setIsAuthenticated(false);
       } finally {
         setIsLoading(false);
@@ -37,7 +31,6 @@ function App() {
 
   const handleAuthSuccess = async () => {
     setIsAuthenticated(true);
-    await initializeIoT();
   };
 
   const handleSignOut = () => {
@@ -59,7 +52,9 @@ function App() {
         <>
           <div className="flex items-center mb-8">
             <Droplet className="h-10 w-10 text-green-600 mr-2" />
-            <h1 className="text-3xl font-bold text-gray-900">Plant Watering System</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              Plant Watering System
+            </h1>
           </div>
           <AuthForm onAuthSuccess={handleAuthSuccess} />
         </>

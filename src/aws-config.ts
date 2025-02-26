@@ -1,6 +1,6 @@
-// AWS Configuration
-export const awsConfig = {
-  // Replace these values with your actual AWS Cognito and IoT Core configuration
+import { ResourcesConfig } from "@aws-amplify/core";
+
+export const awsConfig: ResourcesConfig = {
   Auth: {
     Cognito: {
       userPoolId: "us-east-2_e0pLVMB6Z",
@@ -17,5 +17,7 @@ export const awsConfig = {
       },
       allowGuestAccess: true,
     },
-  }
+  },
 };
+
+// 123456aA*

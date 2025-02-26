@@ -12,8 +12,8 @@ import {
   AlertTriangle,
   RefreshCw,
 } from "lucide-react";
-import { ConnectionStatus, PlantWateringStatus } from "../types";
 import { MQTTService, useMQTTStore } from "../iotService";
+import { formatDistanceToNow } from "date-fns";
 
 interface DashboardProps {
   onSignOut: () => void;
@@ -24,12 +24,8 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
   const mqttServiceRef = useRef<MQTTService | null>(null);
 
   // Get state from MQTT store
-  const isConnected = useMQTTStore((state) => state.isConnected);
-  const isRaspberryConnected = useMQTTStore(
-    (state) => state.isRaspberryConnected
-  );
-  const lastWatered = useMQTTStore((state) => state.lastWatered);
-  const isWateringOn = useMQTTStore((state) => state.isWateringOn);
+  const { isConnected, isRaspberryConnected, lastWatered, isWateringOn } =
+    useMQTTStore();
 
   useEffect(() => {
     // Initialize MQTT service
@@ -199,7 +195,9 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
               </div>
               <div className="flex items-center">
                 <span className="text-sm text-gray-600 mr-2">
-                  {formatDate(lastWatered)}
+                  {lastWatered
+                    ? formatDistanceToNow(lastWatered, { addSuffix: true })
+                    : "-"}
                 </span>
                 <button
                   onClick={handleRequestLastWatered}
