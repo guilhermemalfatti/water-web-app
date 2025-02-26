@@ -5,6 +5,7 @@ import {
 } from "@aws-amplify/pubsub";
 import { create } from "zustand";
 import { Hub } from "aws-amplify/utils";
+import { v4 as uuidv4 } from "uuid";
 
 const TOPIC_WATERING_SMALL = "plants/watering/small";
 const TOPIC_WATERING_STOP = "plants/watering/stop";
@@ -42,12 +43,13 @@ export class MQTTService {
 
   constructor() {
     console.log("Constructor called");
+    this.initialize();
+  }
 
-    this.connect();
-
-    this.subscribeToTopics();
-
-    this.listenEvents();
+  private async initialize() {
+    await this.connect();
+    await this.subscribeToTopics();
+    await this.listenEvents();
   }
 
   connect = async () => {
@@ -56,6 +58,7 @@ export class MQTTService {
       const pubSubClient = new PubSubClient({
         region: "us-east-2",
         endpoint: "wss://a3ec0i3g0gczud-ats.iot.us-east-2.amazonaws.com/mqtt",
+        clientId: "plant-watering-app-" + uuidv4(),
       });
 
       this.pubSubClient = pubSubClient;
@@ -76,7 +79,9 @@ export class MQTTService {
             case ConnectionState.Connected:
               console.log("[HUB UPDATE] Successfully connected to MQTT");
               useMQTTStore.getState().setIsConnected(true);
-              this.subscribeToTopics();
+              // this.subscribeToTopics();
+
+              this.pingDevice();
               break;
 
             case ConnectionState.Connecting:
@@ -99,7 +104,8 @@ export class MQTTService {
             case ConnectionState.Disconnected:
               console.log("[HUB UPDATE]Disconnected from MQTT");
               useMQTTStore.getState().setIsConnected(false);
-              this.connect();
+              // this.connect();
+              setTimeout(this.connect, 3000);
               break;
 
             case ConnectionState.ConnectedPendingNetwork:
@@ -119,7 +125,7 @@ export class MQTTService {
         }
       });
     } catch (error) {
-      console.error("Failed to connect to AWS IoT:", error);
+      console.error("[HUB] Failed to connect to AWS IoT:", error);
       useMQTTStore.getState().setIsConnected(false);
     }
   };

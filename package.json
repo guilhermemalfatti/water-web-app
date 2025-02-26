@@ -11,12 +11,13 @@
   },
   "dependencies": {
     "@aws-amplify/pubsub": "^6.1.45",
-    "aws-amplify": "^6.0.17",
+    "aws-amplify": "^6.1.45",
     "aws-iot-device-sdk": "^2.2.13",
     "date-fns": "^4.1.0",
     "lucide-react": "^0.344.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "uuid": "^11.1.0",
     "zustand": "^4.5.6"
   },
   "devDependencies": {

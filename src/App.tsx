@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Amplify } from "aws-amplify";
 import { fetchAuthSession } from "aws-amplify/auth";
 import { Droplet, Loader2 } from "lucide-react";

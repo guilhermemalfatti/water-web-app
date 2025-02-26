@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { MQTTService, useMQTTStore } from "../iotService";
 import { formatDistanceToNow } from "date-fns";
-
+import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
 interface DashboardProps {
   onSignOut: () => void;
 }
@@ -22,7 +22,7 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
   const [error, setError] = useState<string | null>(null);
   const mqttServiceRef = useRef<MQTTService | null>(null);
-
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   // Get state from MQTT store
   const { isConnected, isRaspberryConnected, lastWatered, isWateringOn } =
     useMQTTStore();
@@ -50,6 +50,16 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
         console.error("MQTT initialization error:", err);
       }
     }
+    const getUserEmail = async () => {
+      try {
+        const user = await getCurrentUser();
+        setUserEmail(user.signInDetails?.loginId as string);
+      } catch (error) {
+        console.error("Auth check error:", error);
+      }
+    };
+
+    getUserEmail();
   }, []);
 
   const handleStartWatering = async () => {
@@ -98,11 +108,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
     }
   };
 
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return "Never";
-    return new Date(dateString).toLocaleString();
-  };
-
   return (
     <div className="w-full max-w-4xl p-6 bg-white rounded-lg shadow-lg">
       <div className="flex justify-between items-center mb-8">
@@ -115,6 +120,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
         >
           <LogOut className="mr-1" size={18} />
           <span>Sign Out</span>
+          <span className="ml-2 text-sm text-gray-500">[{userEmail}]</span>
         </button>
       </div>
 
