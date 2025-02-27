@@ -286,7 +286,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
                       ? "bg-gray-200"
                       : "bg-blue-100 hover:bg-blue-200"
                   }`}
-                  onClick={() => setWateringSeconds(3)}
+                  onClick={() => setWateringSeconds(15)}
                   disabled={
                     isWateringOn || !isConnected || !isRaspberryConnected
                   }
@@ -299,7 +299,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
                       ? "bg-gray-200"
                       : "bg-blue-100 hover:bg-blue-200"
                   }`}
-                  onClick={() => setWateringSeconds(5)}
+                  onClick={() => setWateringSeconds(30)}
                   disabled={
                     isWateringOn || !isConnected || !isRaspberryConnected
                   }
@@ -312,7 +312,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
                       ? "bg-gray-200"
                       : "bg-blue-100 hover:bg-blue-200"
                   }`}
-                  onClick={() => setWateringSeconds(10)}
+                  onClick={() => setWateringSeconds(40)}
                   disabled={
                     isWateringOn || !isConnected || !isRaspberryConnected
                   }
@@ -325,7 +325,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
                       ? "bg-gray-200"
                       : "bg-blue-100 hover:bg-blue-200"
                   }`}
-                  onClick={() => setWateringSeconds(20)}
+                  onClick={() => setWateringSeconds(60)}
                   disabled={
                     isWateringOn || !isConnected || !isRaspberryConnected
                   }
