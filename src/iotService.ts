@@ -49,6 +49,7 @@ export class MQTTService {
   private async initialize() {
     await this.connect();
     await this.subscribeToTopics();
+    await this.requestLastWatered();
     await this.listenEvents();
   }
 

@@ -39,9 +39,6 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
           mqttServiceRef.current?.pingDevice();
         }, 30000); // Ping every 30 seconds
 
-        // Request last watered time on initial load
-        mqttServiceRef.current.requestLastWatered();
-
         // Clean up on unmount
         return () => {
           clearInterval(pingInterval);
@@ -54,6 +51,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
     const getUserEmail = async () => {
       try {
         const user = await getCurrentUser();
+        console.log("User:", user);
         setUserEmail(user.signInDetails?.loginId as string);
       } catch (error) {
         console.error("Auth check error:", error);
@@ -254,7 +252,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
                   type="range"
                   id="wateringDuration"
                   min="1"
-                  max="30"
+                  max="60"
                   value={wateringSeconds}
                   onChange={(e) => setWateringSeconds(parseInt(e.target.value))}
                   className="flex-1"
@@ -293,7 +291,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
                     isWateringOn || !isConnected || !isRaspberryConnected
                   }
                 >
-                  3s
+                  15s
                 </button>
                 <button
                   className={`px-2 py-1 rounded ${
@@ -306,7 +304,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
                     isWateringOn || !isConnected || !isRaspberryConnected
                   }
                 >
-                  5s
+                  30s
                 </button>
                 <button
                   className={`px-2 py-1 rounded ${
@@ -319,7 +317,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
                     isWateringOn || !isConnected || !isRaspberryConnected
                   }
                 >
-                  10s
+                  40s
                 </button>
                 <button
                   className={`px-2 py-1 rounded ${
@@ -332,7 +330,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
                     isWateringOn || !isConnected || !isRaspberryConnected
                   }
                 >
-                  20s
+                  60s
                 </button>
               </div>
             </div>
