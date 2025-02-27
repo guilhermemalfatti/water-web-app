@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { MQTTService, useMQTTStore } from "../iotService";
 import { formatDistanceToNow } from "date-fns";
-import { fetchAuthSession, getCurrentUser } from "aws-amplify/auth";
+import { getCurrentUser } from "aws-amplify/auth";
 interface DashboardProps {
   onSignOut: () => void;
 }
@@ -23,6 +23,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
   const [error, setError] = useState<string | null>(null);
   const mqttServiceRef = useRef<MQTTService | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [wateringSeconds, setWateringSeconds] = useState<number>(5);
   // Get state from MQTT store
   const { isConnected, isRaspberryConnected, lastWatered, isWateringOn } =
     useMQTTStore();
@@ -64,7 +65,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
 
   const handleStartWatering = async () => {
     try {
-      await mqttServiceRef.current?.startWatering();
+      await mqttServiceRef.current?.startWatering(wateringSeconds);
     } catch (err) {
       setError("Failed to send start watering command");
       console.error("MQTT publish error:", err);
@@ -240,6 +241,102 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
               </span>
             </div>
 
+            {/* Watering Duration Input */}
+            <div className="flex flex-col space-y-2">
+              <label
+                htmlFor="wateringDuration"
+                className="text-sm text-gray-600"
+              >
+                Watering Duration (seconds):
+              </label>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="range"
+                  id="wateringDuration"
+                  min="1"
+                  max="30"
+                  value={wateringSeconds}
+                  onChange={(e) => setWateringSeconds(parseInt(e.target.value))}
+                  className="flex-1"
+                  disabled={
+                    isWateringOn || !isConnected || !isRaspberryConnected
+                  }
+                />
+                <div className="flex items-center border rounded px-2 py-1 w-16">
+                  <input
+                    type="number"
+                    min="1"
+                    max="60"
+                    value={wateringSeconds}
+                    onChange={(e) => {
+                      const value = parseInt(e.target.value);
+                      if (value > 0 && value <= 60) {
+                        setWateringSeconds(value);
+                      }
+                    }}
+                    className="w-full text-center appearance-none"
+                    disabled={
+                      isWateringOn || !isConnected || !isRaspberryConnected
+                    }
+                  />
+                </div>
+              </div>
+              <div className="flex justify-between text-xs text-gray-500">
+                <button
+                  className={`px-2 py-1 rounded ${
+                    isWateringOn || !isConnected || !isRaspberryConnected
+                      ? "bg-gray-200"
+                      : "bg-blue-100 hover:bg-blue-200"
+                  }`}
+                  onClick={() => setWateringSeconds(3)}
+                  disabled={
+                    isWateringOn || !isConnected || !isRaspberryConnected
+                  }
+                >
+                  3s
+                </button>
+                <button
+                  className={`px-2 py-1 rounded ${
+                    isWateringOn || !isConnected || !isRaspberryConnected
+                      ? "bg-gray-200"
+                      : "bg-blue-100 hover:bg-blue-200"
+                  }`}
+                  onClick={() => setWateringSeconds(5)}
+                  disabled={
+                    isWateringOn || !isConnected || !isRaspberryConnected
+                  }
+                >
+                  5s
+                </button>
+                <button
+                  className={`px-2 py-1 rounded ${
+                    isWateringOn || !isConnected || !isRaspberryConnected
+                      ? "bg-gray-200"
+                      : "bg-blue-100 hover:bg-blue-200"
+                  }`}
+                  onClick={() => setWateringSeconds(10)}
+                  disabled={
+                    isWateringOn || !isConnected || !isRaspberryConnected
+                  }
+                >
+                  10s
+                </button>
+                <button
+                  className={`px-2 py-1 rounded ${
+                    isWateringOn || !isConnected || !isRaspberryConnected
+                      ? "bg-gray-200"
+                      : "bg-blue-100 hover:bg-blue-200"
+                  }`}
+                  onClick={() => setWateringSeconds(20)}
+                  disabled={
+                    isWateringOn || !isConnected || !isRaspberryConnected
+                  }
+                >
+                  20s
+                </button>
+              </div>
+            </div>
+
             <div className="flex items-center justify-between mt-6">
               <button
                 onClick={handleStartWatering}
@@ -251,7 +348,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
                 }`}
               >
                 <Play size={16} className="mr-1" />
-                Start Watering
+                Water for {wateringSeconds}s
               </button>
 
               <button

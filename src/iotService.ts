@@ -130,7 +130,6 @@ export class MQTTService {
     }
   };
 
-  // todo decide in what topics we subscribe
   private async subscribeToTopics() {
     if (!this.pubSubClient) return;
 
@@ -197,7 +196,7 @@ export class MQTTService {
     });
   };
 
-  startWatering = async () => {
+  startWatering = async (seconds: number) => {
     if (!this.pubSubClient) {
       console.log("Not connected to MQTT");
       return;
@@ -209,7 +208,7 @@ export class MQTTService {
         topics: [TOPIC_WATERING_SMALL],
         message: {
           status: "on",
-          seconds: 5,
+          seconds: seconds,
         },
       });
     } catch (error) {
