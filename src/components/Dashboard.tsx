@@ -23,7 +23,7 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
   const [error, setError] = useState<string | null>(null);
   const mqttServiceRef = useRef<MQTTService | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
-  const [wateringSeconds, setWateringSeconds] = useState<number>(5);
+  const [wateringSeconds, setWateringSeconds] = useState<number>(120);
   // Get state from MQTT store
   const { isConnected, isRaspberryConnected, lastWatered, isWateringOn } =
     useMQTTStore();
@@ -264,11 +264,11 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
                   <input
                     type="number"
                     min="1"
-                    max="60"
+                    max="120"
                     value={wateringSeconds}
                     onChange={(e) => {
                       const value = parseInt(e.target.value);
-                      if (value > 0 && value <= 60) {
+                      if (value > 0 && value <= 120) {
                         setWateringSeconds(value);
                       }
                     }}
@@ -312,12 +312,12 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
                       ? "bg-gray-200"
                       : "bg-blue-100 hover:bg-blue-200"
                   }`}
-                  onClick={() => setWateringSeconds(40)}
+                  onClick={() => setWateringSeconds(60)}
                   disabled={
                     isWateringOn || !isConnected || !isRaspberryConnected
                   }
                 >
-                  40s
+                  60s
                 </button>
                 <button
                   className={`px-2 py-1 rounded ${
@@ -325,12 +325,12 @@ const Dashboard: React.FC<DashboardProps> = ({ onSignOut }) => {
                       ? "bg-gray-200"
                       : "bg-blue-100 hover:bg-blue-200"
                   }`}
-                  onClick={() => setWateringSeconds(60)}
+                  onClick={() => setWateringSeconds(120)}
                   disabled={
                     isWateringOn || !isConnected || !isRaspberryConnected
                   }
                 >
-                  60s
+                  120s
                 </button>
               </div>
             </div>
